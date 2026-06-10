@@ -147,6 +147,8 @@ PlaceholderAPI is installed, a final note says its placeholders work too.
   triggered (frame change, join/quit); making every dynamic value tick
   independently would require snapshots to carry resolved text and is a planned
   follow-up.
-- Caffeine and Configurate are bundled **without relocation**. If another plugin
-  on the server ships conflicting versions, enable shading/relocation in
-  `tablist-paper/build.gradle.kts` before production use.
+- Bundled data libraries (Caffeine, Configurate + geantyref + `net.kyori:option`)
+  are **relocated** under `com.hanielfialho.tablist.libs` by the `shadowJar` task,
+  so a conflicting copy from another plugin cannot clash on the shared classloader.
+  The CommandFramework and its ClassGraph scanner are intentionally left
+  un-relocated (the framework discovers commands by package name at runtime).

@@ -41,14 +41,49 @@ tasks.withType<ProcessResources>().configureEach {
     }
 }
 
-// The deployable plugin jar bundles tablist-core, Caffeine and Configurate.
-// Adventure and paper-api are provided by the Paper runtime, so they are kept out.
+// The deployable plugin jar bundles tablist-core and its non-provided runtime
+// dependencies (Caffeine, Configurate + geantyref + net.kyori:option, and the
+// CommandFramework). Adventure and paper-api come from the Paper runtime.
+//
+// Bundled data libraries are RELOCATED under `com.hanielfialho.tablist.libs` so
+// that another plugin shipping a different Caffeine/Configurate version cannot
+// clash with ours on the shared server classloader. Relocation rewrites every
+// reference across the whole shaded jar (including the CommandFramework's own use
+// of Caffeine), so it is enough to list each library once here.
+//
+// The CommandFramework and its ClassGraph scanner are deliberately NOT relocated:
+// the framework scans command classes by package name at runtime, and rewriting
+// its packages risks breaking that discovery for a conflict that is far less
+// likely than two plugins shading Configurate.
+val libsPrefix = "com.hanielfialho.tablist.libs"
+
 tasks.named<ShadowJar>("shadowJar") {
     // Distinct "-all" classifier so it does not clash with the thin `jar`.
     archiveClassifier.set("all")
+
+    // Adventure is provided by Paper, so it must stay un-relocated and un-bundled.
+    // Only the adventure-* artifacts are excluded; net.kyori:option is a Configurate
+    // dependency that Paper does NOT provide, so it is kept (and relocated below).
     dependencies {
-        exclude(dependency("net.kyori:.*:.*"))
+        exclude(dependency("net.kyori:adventure-.*:.*"))
+        // Compile-time-only annotations; never needed on the runtime classpath.
+        exclude(dependency("org.jspecify:jspecify:.*"))
+        exclude(dependency("com.google.errorprone:error_prone_annotations:.*"))
     }
+
+    relocate("com.github.benmanes.caffeine", "$libsPrefix.caffeine")
+    relocate("org.spongepowered.configurate", "$libsPrefix.configurate")
+    relocate("io.leangen.geantyref", "$libsPrefix.geantyref")
+    relocate("net.kyori.option", "$libsPrefix.option")
+
+    // Configurate registers TypeSerializers via the ServiceLoader; merge (and let
+    // shadow rewrite) the META-INF/services files so the relocated classes resolve.
+    mergeServiceFiles()
+
+    // Drop signatures (invalid after merging) and redundant build metadata.
+    exclude("META-INF/*.SF", "META-INF/*.DSA", "META-INF/*.RSA")
+    exclude("META-INF/maven/**")
+    exclude("module-info.class", "META-INF/versions/*/module-info.class")
 }
 
 // Make `build` produce the bundled jar.
