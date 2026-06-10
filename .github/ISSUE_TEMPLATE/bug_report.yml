@@ -1,0 +1,51 @@
+name: 🐞 Bug report
+description: Report something not working as expected.
+labels: [bug]
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Set config '...'
+        2. Run '/tablist ...'
+        3. See '...'
+    validations:
+      required: true
+  - type: input
+    id: tablist-version
+    attributes:
+      label: Tablist version
+      placeholder: e.g. 1.0.0
+    validations:
+      required: true
+  - type: input
+    id: server
+    attributes:
+      label: Server software & version
+      description: Output of `/version`.
+      placeholder: e.g. Paper 1.21.x / Folia build NNN
+    validations:
+      required: true
+  - type: dropdown
+    id: papi
+    attributes:
+      label: Is PlaceholderAPI installed?
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs / config
+      description: Paste any errors and your `config.yml`. Will be rendered as code.
+      render: shell

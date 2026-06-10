@@ -8,7 +8,7 @@ main: com.hanielfialho.tablist.paper.TablistPlugin
 bootstrapper: com.hanielfialho.tablist.paper.bootstrap.TablistBootstrap
 description: High-performance, modular tab-list plugin for Paper.
 author: Haniel Fialho
-website: https://github.com/hanielfialho/tablist
+website: https://github.com/HanielCota/tablist
 # Minimum Minecraft API the plugin targets. Verify this against the exact
 # Paper build you deploy to (see the paper-api version in libs.versions.toml).
 api-version: '1.21'

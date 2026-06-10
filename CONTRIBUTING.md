@@ -6,7 +6,7 @@ simply that contributions keep it fast, modular and well-tested.
 ## Getting started
 
 ```bash
-git clone https://github.com/hanielfialho/tablist
+git clone https://github.com/HanielCota/tablist
 cd tablist
 ./gradlew build      # compiles both modules, runs the tests, checks formatting
 ```

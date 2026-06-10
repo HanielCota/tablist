@@ -71,7 +71,7 @@ viewers for 60 seconds and asserts **zero** renders after the first cycle.
 > **Requirements:** Paper (or Folia) **1.21+** · Java **21+** runtime.
 
 1. **Get the jar** — download `Tablist-<version>-all.jar` (the shaded jar) from the
-   [releases page](https://github.com/hanielfialho/tablist/releases), or
+   [releases page](https://github.com/HanielCota/tablist/releases), or
    [build it yourself](#-building-from-source).
 2. **Drop it** into your server's `plugins/` folder.
 3. *(Optional)* install [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/)
