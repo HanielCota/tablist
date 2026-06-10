@@ -19,6 +19,22 @@ import org.junit.jupiter.api.Test;
 
 class StatusReporterTest {
 
+  private static void primeOneHit(ResolvedTextCache cache) {
+    ResolvedTextKey key = new ResolvedTextKey(new ViewerId(UUID.randomUUID()), "<red>x</red>");
+    cache.get(key, () -> CompletableFuture.completedFuture(Component.empty())).join();
+    cache.get(key, () -> CompletableFuture.completedFuture(Component.empty())).join();
+  }
+
+  private static void advanceTo(AnimationClock clock, long tick) {
+    for (long i = 0; i < tick; i++) {
+      clock.advance();
+    }
+  }
+
+  private static ActiveConfig defaultConfig() {
+    return new ActiveConfig(TabConfig.defaults(), () -> {});
+  }
+
   @Test
   void reportsViewersHitRateUpdatesAndCurrentFrame() {
     List<ViewerId> viewers =
@@ -45,21 +61,5 @@ class StatusReporterTest {
     assertEquals(0.5, status.cacheHitRate(), 0.0001);
     assertEquals(3, status.updatesLastMinute());
     assertEquals(1, status.currentFrame());
-  }
-
-  private static void primeOneHit(ResolvedTextCache cache) {
-    ResolvedTextKey key = new ResolvedTextKey(new ViewerId(UUID.randomUUID()), "<red>x</red>");
-    cache.get(key, () -> CompletableFuture.completedFuture(Component.empty())).join();
-    cache.get(key, () -> CompletableFuture.completedFuture(Component.empty())).join();
-  }
-
-  private static void advanceTo(AnimationClock clock, long tick) {
-    for (long i = 0; i < tick; i++) {
-      clock.advance();
-    }
-  }
-
-  private static ActiveConfig defaultConfig() {
-    return new ActiveConfig(TabConfig.defaults(), () -> {});
   }
 }

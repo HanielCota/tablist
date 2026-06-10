@@ -21,12 +21,10 @@ import org.junit.jupiter.api.io.TempDir;
 
 class ConfigReloaderTest {
 
-  @TempDir private Path dir;
-
   private final List<ViewerId> viewers =
       List.of(new ViewerId(UUID.randomUUID()), new ViewerId(UUID.randomUUID()));
   private final AtomicInteger invalidations = new AtomicInteger();
-
+  @TempDir private Path dir;
   private Path file;
   private DirtyTracker dirty;
   private ActiveConfig active;

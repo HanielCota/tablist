@@ -39,8 +39,6 @@ public final class TextResolver {
   public CompletableFuture<Component> resolve(ViewerId viewer, String template) {
     Objects.requireNonNull(viewer, "viewer");
     Objects.requireNonNull(template, "template");
-    return placeholders
-        .resolve(viewer, template)
-        .thenApply(resolved -> miniMessage.deserialize(resolved));
+    return placeholders.resolve(viewer, template).thenApply(miniMessage::deserialize);
   }
 }

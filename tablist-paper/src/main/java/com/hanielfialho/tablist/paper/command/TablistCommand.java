@@ -23,6 +23,8 @@ public final class TablistCommand {
   private final ReloadController reload;
   private final StatusController status;
   private final ToggleController toggle;
+  private final PreviewController preview;
+  private final PlaceholdersController placeholders;
 
   /**
    * Creates the command over its controllers.
@@ -30,11 +32,20 @@ public final class TablistCommand {
    * @param reload the reload controller; never {@code null}
    * @param status the status controller; never {@code null}
    * @param toggle the toggle controller; never {@code null}
+   * @param preview the preview controller; never {@code null}
+   * @param placeholders the placeholders controller; never {@code null}
    */
-  public TablistCommand(ReloadController reload, StatusController status, ToggleController toggle) {
+  public TablistCommand(
+      ReloadController reload,
+      StatusController status,
+      ToggleController toggle,
+      PreviewController preview,
+      PlaceholdersController placeholders) {
     this.reload = Objects.requireNonNull(reload, "reload");
     this.status = Objects.requireNonNull(status, "status");
     this.toggle = Objects.requireNonNull(toggle, "toggle");
+    this.preview = Objects.requireNonNull(preview, "preview");
+    this.placeholders = Objects.requireNonNull(placeholders, "placeholders");
   }
 
   /**
@@ -72,5 +83,30 @@ public final class TablistCommand {
   @Description("Toggle your own custom tab list on or off")
   public void toggle(CommandActor actor) {
     toggle.toggle(actor);
+  }
+
+  /**
+   * {@code /tablist preview} — echoes the header and footer as they render for the sender.
+   *
+   * @param actor the command sender
+   */
+  @Subcommand("preview")
+  @Permission("tablist.admin")
+  @PlayerOnly
+  @Description("Preview the header and footer as they render for you")
+  public void preview(CommandActor actor) {
+    preview.preview(actor);
+  }
+
+  /**
+   * {@code /tablist placeholders} — lists the placeholders usable in the configuration.
+   *
+   * @param actor the command sender
+   */
+  @Subcommand("placeholders")
+  @Permission("tablist.admin")
+  @Description("List the placeholders you can use in the config")
+  public void placeholders(CommandActor actor) {
+    placeholders.placeholders(actor);
   }
 }

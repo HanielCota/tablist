@@ -1,6 +1,5 @@
 import com.diffplug.gradle.spotless.SpotlessExtension
 import com.diffplug.spotless.LineEnding
-import org.gradle.external.javadoc.StandardJavadocDocletOptions
 
 plugins {
     // Applied (not configured) here so the plugins are on the build classpath

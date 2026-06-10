@@ -3,10 +3,13 @@ package com.hanielfialho.tablist.paper.bootstrap;
 import com.hanielfialho.commandframework.paper.instance.CommandInstanceResolver;
 import com.hanielfialho.commandframework.paper.instance.ReflectiveCommandInstanceResolver;
 import com.hanielfialho.tablist.paper.command.Feedback;
+import com.hanielfialho.tablist.paper.command.PlaceholdersController;
+import com.hanielfialho.tablist.paper.command.PreviewController;
 import com.hanielfialho.tablist.paper.command.ReloadController;
 import com.hanielfialho.tablist.paper.command.StatusController;
 import com.hanielfialho.tablist.paper.command.TablistCommand;
 import com.hanielfialho.tablist.paper.command.ToggleController;
+import com.hanielfialho.tablist.paper.placeholder.PaperPlaceholderResolvers;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -52,6 +55,8 @@ public final class TablistCommandInstanceResolver implements CommandInstanceReso
     return new TablistCommand(
         new ReloadController(wired.reloader(), feedback),
         new StatusController(wired.statusReporter(), feedback),
-        new ToggleController(wired.toggle(), wired.dirty(), feedback));
+        new ToggleController(wired.toggle(), wired.dirty(), feedback),
+        new PreviewController(wired.config(), wired.pipeline(), feedback),
+        new PlaceholdersController(feedback, PaperPlaceholderResolvers.placeholderApiPresent()));
   }
 }

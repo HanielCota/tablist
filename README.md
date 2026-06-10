@@ -52,17 +52,17 @@ viewers for 60 seconds and asserts **zero** renders after the first cycle.
 
 ## ✨ Features
 
-| | Feature | Details |
-| :-: | --- | --- |
-| 🎞️ | **Animated header & footer** | Cycle any number of [MiniMessage](https://docs.advntr.dev/minimessage/format.html) frames at a configurable interval. A single frame = a static line. |
-| 🧩 | **Per-viewer placeholders** | Built-in `%player_name%`, `%online%`, `%ping%` — plus the full [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) catalogue when installed (optional, auto-detected). |
-| 🪜 | **Permission-based sorting** | Order players by group via `tablist.group.<name>` permissions and configurable weights. |
-| 😴 | **Truly idle when idle** | The diff engine sends a packet only for what actually changed. A static tab list costs **zero** updates per tick. |
-| 🧵 | **Folia-ready** | Every player mutation is routed to that player's region thread. Runs unchanged on Paper *and* Folia. |
-| 🎨 | **MiniMessage everywhere** | Colours, gradients and tags in every text field — including all command feedback. |
-| 🚫 | **No NMS, no packets, no ProtocolLib** | Built entirely on the official Paper API. Survives version bumps. |
-| 🎛️ | **Live runtime control** | `/tablist reload`, `status` and `toggle` act on the running instance — no restart. |
-| 🧪 | **Unit-testable core** | Domain logic has **zero** Bukkit imports and is tested with plain JUnit, no server. |
+|     | Feature                                | Details                                                                                                                                                                                      |
+|:---:|----------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| 🎞️ | **Animated header & footer**           | Cycle any number of [MiniMessage](https://docs.advntr.dev/minimessage/format.html) frames at a configurable interval. A single frame = a static line.                                        |
+| 🧩  | **Per-viewer placeholders**            | Built-in `%player_name%`, `%online%`, `%ping%` — plus the full [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) catalogue when installed (optional, auto-detected). |
+| 🪜  | **Permission-based sorting**           | Order players by group via `tablist.group.<name>` permissions and configurable weights.                                                                                                      |
+| 😴  | **Truly idle when idle**               | The diff engine sends a packet only for what actually changed. A static tab list costs **zero** updates per tick.                                                                            |
+| 🧵  | **Folia-ready**                        | Every player mutation is routed to that player's region thread. Runs unchanged on Paper *and* Folia.                                                                                         |
+| 🎨  | **MiniMessage everywhere**             | Colours, gradients and tags in every text field — including all command feedback.                                                                                                            |
+| 🚫  | **No NMS, no packets, no ProtocolLib** | Built entirely on the official Paper API. Survives version bumps.                                                                                                                            |
+| 🎛️ | **Live runtime control**               | `/tablist reload`, `status` and `toggle` act on the running instance — no restart.                                                                                                           |
+| 🧪  | **Unit-testable core**                 | Domain logic has **zero** Bukkit imports and is tested with plain JUnit, no server.                                                                                                          |
 
 ---
 
@@ -91,16 +91,16 @@ viewers for 60 seconds and asserts **zero** renders after the first cycle.
 
 All commands live under the single `/tablist` root.
 
-| Command | Description | Permission |
-| --- | --- | --- |
+| Command           | Description                                                                       | Permission      |
+|-------------------|-----------------------------------------------------------------------------------|-----------------|
 | `/tablist reload` | Reload `config.yml` atomically (safe — failures leave the running config intact). | `tablist.admin` |
-| `/tablist status` | Show viewers, cache hit-rate, updates/min and the current animation frame. | `tablist.admin` |
-| `/tablist toggle` | Toggle the custom tab list for yourself (falls back to the vanilla tab). | `tablist.use` |
+| `/tablist status` | Show viewers, cache hit-rate, updates/min and the current animation frame.        | `tablist.admin` |
+| `/tablist toggle` | Toggle the custom tab list for yourself (falls back to the vanilla tab).          | `tablist.use`   |
 
-| Permission | Purpose | Default |
-| --- | --- | :-: |
-| `tablist.admin` | Manage the plugin (reload, status). | `op` |
-| `tablist.use` | Use player commands (toggle). | `true` |
+| Permission             | Purpose                                                                              | Default |
+|------------------------|--------------------------------------------------------------------------------------|:-------:|
+| `tablist.admin`        | Manage the plugin (reload, status).                                                  |  `op`   |
+| `tablist.use`          | Use player commands (toggle).                                                        | `true`  |
 | `tablist.group.<name>` | Place a player into the sorting group `<name>` — granted by your permissions plugin. | `false` |
 
 ---
@@ -164,23 +164,23 @@ messages:
 
 ### Key sections at a glance
 
-| Section | What it controls | Notes |
-| --- | --- | --- |
-| `header` / `footer` | The animated lines above/below the player list. | One frame = static. `interval-ticks` is per-frame (20 ticks ≈ 1 s). |
-| `name-format` | How each player row is rendered. | `prefix` + `name` + `suffix`, all MiniMessage + placeholders. |
-| `sorting` | Group order in the list. | **Lower weight = higher up.** Ungrouped players fall back to `default`. |
-| `refresh` | Placeholder re-resolution cadence. | `placeholder-refresh-seconds` ≥ 1. Drives the Caffeine cache window. |
-| `messages` | All command feedback. | Pure MiniMessage; uses `<placeholder>` tags for dynamic values. |
+| Section             | What it controls                                | Notes                                                                   |
+|---------------------|-------------------------------------------------|-------------------------------------------------------------------------|
+| `header` / `footer` | The animated lines above/below the player list. | One frame = static. `interval-ticks` is per-frame (20 ticks ≈ 1 s).     |
+| `name-format`       | How each player row is rendered.                | `prefix` + `name` + `suffix`, all MiniMessage + placeholders.           |
+| `sorting`           | Group order in the list.                        | **Lower weight = higher up.** Ungrouped players fall back to `default`. |
+| `refresh`           | Placeholder re-resolution cadence.              | `placeholder-refresh-seconds` ≥ 1. Drives the Caffeine cache window.    |
+| `messages`          | All command feedback.                           | Pure MiniMessage; uses `<placeholder>` tags for dynamic values.         |
 
 ---
 
 ## 🔤 Placeholders
 
-| Placeholder | Source | Available |
-| --- | --- | --- |
-| `%player_name%` | Built-in | Always |
-| `%online%` | Built-in (current online count) | Always |
-| `%ping%` | Built-in (viewer's latency) | Always |
+| Placeholder                | Source                                                                    | Available                        |
+|----------------------------|---------------------------------------------------------------------------|----------------------------------|
+| `%player_name%`            | Built-in                                                                  | Always                           |
+| `%online%`                 | Built-in (current online count)                                           | Always                           |
+| `%ping%`                   | Built-in (viewer's latency)                                               | Always                           |
 | `%<any_papi_placeholder>%` | [PlaceholderAPI](https://www.spigotmc.org/resources/placeholderapi.6245/) | When PlaceholderAPI is installed |
 
 Resolution is **per viewer** and cached per `(viewer, template)` for the refresh window, so even an
@@ -244,10 +244,10 @@ flowchart TB
     paper -->|implements contracts| core
 ```
 
-| Module | Responsibility | Bukkit/Paper? |
-| --- | --- | :-: |
-| `tablist-core` | Domain types, contracts (ports) and all logic — dirty/diff/cache/config/text. | ❌ **Zero** Bukkit imports |
-| `tablist-paper` | Paper adapter: implements the core ports, bootstraps the plugin, wires the `/tablist` command. | ✅ |
+| Module          | Responsibility                                                                                 |       Bukkit/Paper?       |
+|-----------------|------------------------------------------------------------------------------------------------|:-------------------------:|
+| `tablist-core`  | Domain types, contracts (ports) and all logic — dirty/diff/cache/config/text.                  | ❌ **Zero** Bukkit imports |
+| `tablist-paper` | Paper adapter: implements the core ports, bootstraps the plugin, wires the `/tablist` command. |             ✅             |
 
 **Tech stack:** Java 25 (toolchain) · [Configurate](https://github.com/SpongePowered/Configurate)
 (YAML) · [Adventure / MiniMessage](https://docs.advntr.dev/) ·

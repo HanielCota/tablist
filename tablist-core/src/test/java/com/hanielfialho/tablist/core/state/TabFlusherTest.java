@@ -34,6 +34,18 @@ class TabFlusherTest {
   private DirtyTracker dirty;
   private TabFlusher flusher;
 
+  private static SnapshotSource sourceOf(TabSnapshot snapshot) {
+    return viewer -> snapshot;
+  }
+
+  private static TabSnapshot snapshot(HeaderFooter headerFooter, TabEntry... entries) {
+    return new TabSnapshot(VIEWER, TabEntries.of(List.of(entries)), headerFooter);
+  }
+
+  private static TabEntry entry(String name) {
+    return new TabEntry(new ViewerId(UUID.randomUUID()), EntryText.of("", name, ""), 0);
+  }
+
   @BeforeEach
   void setUp() {
     dirty = new DirtyTracker();
@@ -85,17 +97,5 @@ class TabFlusherTest {
     ArgumentCaptor<TabDiff> captor = ArgumentCaptor.forClass(TabDiff.class);
     verify(renderer, times(1)).render(eq(VIEWER), captor.capture());
     return captor.getValue();
-  }
-
-  private static SnapshotSource sourceOf(TabSnapshot snapshot) {
-    return viewer -> snapshot;
-  }
-
-  private static TabSnapshot snapshot(HeaderFooter headerFooter, TabEntry... entries) {
-    return new TabSnapshot(VIEWER, TabEntries.of(List.of(entries)), headerFooter);
-  }
-
-  private static TabEntry entry(String name) {
-    return new TabEntry(new ViewerId(UUID.randomUUID()), EntryText.of("", name, ""), 0);
   }
 }

@@ -20,6 +20,11 @@ class ViewerLifecycleTest {
 
   private static final ViewerId VIEWER = new ViewerId(UUID.randomUUID());
 
+  private static TabSnapshot snapshotWithOneRow() {
+    TabEntry row = new TabEntry(new ViewerId(UUID.randomUUID()), EntryText.of("", "X", ""), 0);
+    return new TabSnapshot(VIEWER, TabEntries.of(List.of(row)), HeaderFooter.empty());
+  }
+
   @Test
   void quitLeavesNoTraceInAnyStructure() {
     ViewerRegistry registry = new ViewerRegistry();
@@ -44,11 +49,6 @@ class ViewerLifecycleTest {
         store.lastFor(VIEWER).entries().values().isEmpty(),
         "snapshot store must forget the viewer");
     assertTrue(extra.forgot(VIEWER), "every ViewerScoped collaborator must be told to forget");
-  }
-
-  private static TabSnapshot snapshotWithOneRow() {
-    TabEntry row = new TabEntry(new ViewerId(UUID.randomUUID()), EntryText.of("", "X", ""), 0);
-    return new TabSnapshot(VIEWER, TabEntries.of(List.of(row)), HeaderFooter.empty());
   }
 
   /** Records which viewers it was asked to forget. */

@@ -1,6 +1,6 @@
 name: 🐞 Bug report
 description: Report something not working as expected.
-labels: [bug]
+labels: [ bug ]
 body:
   - type: textarea
     id: what-happened

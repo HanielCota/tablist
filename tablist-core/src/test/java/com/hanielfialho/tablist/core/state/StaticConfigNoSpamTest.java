@@ -33,6 +33,21 @@ class StaticConfigNoSpamTest {
   private static final int TICKS_PER_SECOND = 20;
   private static final int SECONDS = 60;
 
+  private static void tick(Heartbeat heartbeat, TabFlusher flusher, SnapshotSource source) {
+    heartbeat.beat();
+    flusher.flush(source);
+  }
+
+  private static TabRenderer counting(AtomicInteger renders) {
+    return (viewer, diff) -> renders.incrementAndGet();
+  }
+
+  private static ViewerRegistry registryOf(int count) {
+    ViewerRegistry registry = new ViewerRegistry();
+    IntStream.range(0, count).forEach(i -> registry.add(new ViewerId(UUID.randomUUID())));
+    return registry;
+  }
+
   @Test
   void staticConfigSendsZeroRendersAfterTheFirstCycle() {
     ViewerRegistry registry = registryOf(VIEWERS);
@@ -57,21 +72,6 @@ class StaticConfigNoSpamTest {
         VIEWERS, metrics.updatesInLastMinute(), "the update counter must match the renders sent");
   }
 
-  private static void tick(Heartbeat heartbeat, TabFlusher flusher, SnapshotSource source) {
-    heartbeat.beat();
-    flusher.flush(source);
-  }
-
-  private static TabRenderer counting(AtomicInteger renders) {
-    return (viewer, diff) -> renders.incrementAndGet();
-  }
-
-  private static ViewerRegistry registryOf(int count) {
-    ViewerRegistry registry = new ViewerRegistry();
-    IntStream.range(0, count).forEach(i -> registry.add(new ViewerId(UUID.randomUUID())));
-    return registry;
-  }
-
   /**
    * A snapshot source modelling a static configuration: the same roster, header and footer for
    * every tick, so a rebuilt snapshot always equals the last one stored.
@@ -85,13 +85,13 @@ class StaticConfigNoSpamTest {
       this.roster = viewers.stream().map(StaticSnapshotSource::row).toList();
     }
 
+    private static TabEntry row(ViewerId target) {
+      return new TabEntry(target, EntryText.of("", "Player", ""), 0);
+    }
+
     @Override
     public TabSnapshot snapshotOf(ViewerId viewer) {
       return new TabSnapshot(viewer, TabEntries.of(roster), headerFooter);
-    }
-
-    private static TabEntry row(ViewerId target) {
-      return new TabEntry(target, EntryText.of("", "Player", ""), 0);
     }
   }
 }

@@ -49,7 +49,12 @@ public final class PaperPlaceholderResolvers {
     return new CompositePlaceholderResolver(chain);
   }
 
-  private static boolean placeholderApiPresent() {
+  /**
+   * Returns whether PlaceholderAPI is installed on the running server.
+   *
+   * @return {@code true} when the PlaceholderAPI plugin is present
+   */
+  public static boolean placeholderApiPresent() {
     return Bukkit.getPluginManager().getPlugin(PLACEHOLDER_API) != null;
   }
 }

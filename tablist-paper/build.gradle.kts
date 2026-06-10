@@ -1,5 +1,4 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import org.gradle.language.jvm.tasks.ProcessResources
 
 description = "Paper 1.26 adapter for Tablist: implements the core contracts and bootstraps the plugin."
 

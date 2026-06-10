@@ -18,6 +18,11 @@ import org.spongepowered.configurate.objectmapping.meta.Setting;
  *     {@code <frame>}
  * @param toggleOn shown when a viewer enables the custom tab list
  * @param toggleOff shown when a viewer falls back to the vanilla tab list
+ * @param previewHeader the label printed above the header in {@code /tablist preview}
+ * @param previewFooter the label printed above the footer in {@code /tablist preview}
+ * @param placeholdersHeader the heading of the {@code /tablist placeholders} listing
+ * @param placeholdersEntry one catalogue row; supports {@code <name>} and {@code <description>}
+ * @param placeholdersPapi the PlaceholderAPI note, shown only when PlaceholderAPI is installed
  */
 @ConfigSerializable
 public record Messages(
@@ -25,7 +30,12 @@ public record Messages(
     @Setting("reload-error") String reloadError,
     String status,
     @Setting("toggle-on") String toggleOn,
-    @Setting("toggle-off") String toggleOff) {
+    @Setting("toggle-off") String toggleOff,
+    @Setting("preview-header") String previewHeader,
+    @Setting("preview-footer") String previewFooter,
+    @Setting("placeholders-header") String placeholdersHeader,
+    @Setting("placeholders-entry") String placeholdersEntry,
+    @Setting("placeholders-papi") String placeholdersPapi) {
 
   /**
    * Canonical constructor.
@@ -38,6 +48,11 @@ public record Messages(
     Objects.requireNonNull(status, "status");
     Objects.requireNonNull(toggleOn, "toggleOn");
     Objects.requireNonNull(toggleOff, "toggleOff");
+    Objects.requireNonNull(previewHeader, "previewHeader");
+    Objects.requireNonNull(previewFooter, "previewFooter");
+    Objects.requireNonNull(placeholdersHeader, "placeholdersHeader");
+    Objects.requireNonNull(placeholdersEntry, "placeholdersEntry");
+    Objects.requireNonNull(placeholdersPapi, "placeholdersPapi");
   }
 
   /**
@@ -52,6 +67,11 @@ public record Messages(
         "<gray>Viewers: <white><viewers></white> · Cache hit-rate: <white><hitrate></white>"
             + " · Updates/min: <white><updates></white> · Frame: <white><frame></white></gray>",
         "<green>Custom tab list enabled.</green>",
-        "<yellow>Custom tab list disabled — showing the vanilla tab.</yellow>");
+        "<yellow>Custom tab list disabled — showing the vanilla tab.</yellow>",
+        "<gray>──── <white>Header preview</white> ────</gray>",
+        "<gray>──── <white>Footer preview</white> ────</gray>",
+        "<gray>Available placeholders <white>(resolved per viewer)</white>:</gray>",
+        "<white><name></white> <gray>— <description></gray>",
+        "<gray>PlaceholderAPI detected — <white>all its placeholders</white> work here too.</gray>");
   }
 }

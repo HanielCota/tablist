@@ -69,18 +69,75 @@ Expected:
   global flush loop only coalesces and dispatches.
 - Tab list behaves exactly as on Paper.
 
+## 4. Config ergonomics (easier authoring)
+
+These make the config faster to write and mistakes easier to spot. All can be
+checked on the Paper server from step 2.
+
+### `lines:` — static multi-line header/footer
+
+Instead of hand-writing `<newline>` tags, list the lines. An empty entry is a
+blank line (the "skip a line"):
+
+```yaml
+header:
+  lines:
+    - "<gradient:#00c6ff:#0072ff>My Server</gradient>"
+    - ""
+    - "<gray>welcome!</gray>"
+```
+
+Run `/tablist reload`. Expected: the header shows three rows with a blank line in
+the middle. `frames:` still works; if a section sets **both**, `frames:` wins.
+
+### Configuration warnings on load/reload
+
+Introduce a deliberate mistake — an unclosed tag and a placeholder-free name —
+then reload:
+
+```yaml
+header:
+  frames:
+    - "<gradient:#00c6ff:#0072ff>Broken"   # never closed
+name-format:
+  name: "<white>Player</white>"            # no %placeholder%
+```
+
+Run `/tablist reload`. Expected: the console (and plugin log) prints a
+`… configuration warning(s) …` block naming `header.frames[0]` and `name-format`.
+The tab list **still loads** — warnings never block a reload. Fixing the templates
+and reloading clears the warnings.
+
+### `/tablist preview`
+
+As a player with `tablist.admin`, run `/tablist preview`. Expected: the chat
+echoes a **Header preview** label followed by every header frame, then a
+**Footer preview** label and the footer frame — each resolved for *you*
+(placeholders evaluated, `<newline>` shown as real line breaks). Lets you check a
+layout without a second account.
+
+### `/tablist placeholders`
+
+Run `/tablist placeholders`. Expected: a heading plus one line per built-in
+placeholder (`%player_name%`, `%online%`, `%ping%`) with descriptions. If
+PlaceholderAPI is installed, a final note says its placeholders work too.
+
 ## What is being exercised
 
-| Requirement                | Where                                                        |
-| -------------------------- | ----------------------------------------------------------- |
-| Resolve player at render   | `PaperTabRenderer.runIfOnline` → `Bukkit.getPlayer(uuid)`   |
-| Header/footer              | `Player#sendPlayerListHeaderAndFooter(Component, Component)` |
-| Name                       | `Player#playerListName(Component)`                          |
-| Sorting (native)           | `Player#setPlayerListOrder(int)` (teams only as fallback)   |
-| Paper vs Folia             | `TabSchedulerFactory` (runtime `Class.forName` probe)       |
-| Per-player thread (Folia)  | `FoliaViewerScheduler` → `Player#getScheduler()`            |
-| Join/quit anti-leak        | `JoinQuitListener` → `ViewerLifecycle.quit` (`forget` all)  |
-| Manual object graph        | `TablistPlugin#onEnable` (no DI framework, no singletons)   |
+| Requirement               | Where                                                        |
+|---------------------------|--------------------------------------------------------------|
+| Resolve player at render  | `PaperTabRenderer.runIfOnline` → `Bukkit.getPlayer(uuid)`    |
+| Header/footer             | `Player#sendPlayerListHeaderAndFooter(Component, Component)` |
+| Name                      | `Player#playerListName(Component)`                           |
+| Sorting (native)          | `Player#setPlayerListOrder(int)` (teams only as fallback)    |
+| Paper vs Folia            | `TabSchedulerFactory` (runtime `Class.forName` probe)        |
+| Per-player thread (Folia) | `FoliaViewerScheduler` → `Player#getScheduler()`             |
+| Join/quit anti-leak       | `JoinQuitListener` → `ViewerLifecycle.quit` (`forget` all)   |
+| Manual object graph       | `TablistPlugin#onEnable` (no DI framework, no singletons)    |
+| `lines:` → frame sugar    | `LineFrameSugar.expand` (run in `ConfigLoader.load`)        |
+| Config warnings           | `ConfigValidator` → `warningSink` (logged on load/reload)   |
+| `/tablist preview`        | `PreviewController` → `TextResolutionPipeline`              |
+| `/tablist placeholders`   | `PlaceholdersController` → `PlaceholderCatalog`             |
 
 ## Notes / known limitations
 

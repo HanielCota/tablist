@@ -38,6 +38,7 @@ public class TablistPlugin extends JavaPlugin {
 
   private static final long FLUSH_PERIOD_TICKS = 1L;
   private static final long GROUP_CHECK_PERIOD_TICKS = 20L;
+  private static final String CONFIG_FILE = "config.yml";
 
   private TablistServices services;
   private ScheduledTask flushTask;
@@ -46,7 +47,8 @@ public class TablistPlugin extends JavaPlugin {
   @Override
   public void onEnable() {
     saveBundledConfig();
-    this.services = TablistServices.create(getDataFolder().toPath().resolve("config.yml"));
+    this.services =
+        TablistServices.create(getDataFolder().toPath().resolve(CONFIG_FILE), getLogger()::warning);
 
     TabScheduler scheduler = TabSchedulerFactory.create(this);
     GroupWeightResolver groups = new PermissionGroupWeightResolver(services.config());
@@ -116,8 +118,8 @@ public class TablistPlugin extends JavaPlugin {
   // JavaPlugin#saveDefaultConfig() to private. This bundled-config variant only
   // writes the file when one is actually shaded in, avoiding the missing-resource throw.
   private void saveBundledConfig() {
-    if (getResource("config.yml") != null) {
-      saveResource("config.yml", false);
+    if (getResource(CONFIG_FILE) != null) {
+      saveResource(CONFIG_FILE, false);
     }
   }
 }

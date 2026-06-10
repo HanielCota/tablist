@@ -44,6 +44,14 @@ public final class PaperTabRenderer implements TabRenderer {
     this.scheduler = Objects.requireNonNull(scheduler, "scheduler");
   }
 
+  private static void runIfOnline(ViewerId id, Consumer<Player> action) {
+    Player player = Bukkit.getPlayer(id.value());
+    if (player == null) {
+      return;
+    }
+    action.accept(player);
+  }
+
   @Override
   public void render(ViewerId viewer, TabDiff diff) {
     Objects.requireNonNull(viewer, "viewer");
@@ -81,13 +89,5 @@ public final class PaperTabRenderer implements TabRenderer {
 
   private void onPlayer(ViewerId id, Consumer<Player> action) {
     scheduler.forViewer(id).schedule(() -> runIfOnline(id, action));
-  }
-
-  private static void runIfOnline(ViewerId id, Consumer<Player> action) {
-    Player player = Bukkit.getPlayer(id.value());
-    if (player == null) {
-      return;
-    }
-    action.accept(player);
   }
 }

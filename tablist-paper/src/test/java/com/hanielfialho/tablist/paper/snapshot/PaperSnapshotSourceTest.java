@@ -27,6 +27,11 @@ class PaperSnapshotSourceTest {
   private static final ViewerId VIP = new ViewerId(UUID.randomUUID());
   private static final ViewerId DEFAULT = new ViewerId(UUID.randomUUID());
 
+  private static Map<ViewerId, Integer> orderByTarget(TabSnapshot snapshot) {
+    return snapshot.entries().values().stream()
+        .collect(java.util.stream.Collectors.toMap(TabEntry::target, TabEntry::order));
+  }
+
   @Test
   void ordersRowsByGroupWeight() {
     GroupWeights weights =
@@ -49,10 +54,5 @@ class PaperSnapshotSourceTest {
 
     assertTrue(rowOrders.get(ADMIN) > rowOrders.get(VIP), "admin should sort above vip");
     assertTrue(rowOrders.get(VIP) > rowOrders.get(DEFAULT), "vip should sort above default");
-  }
-
-  private static Map<ViewerId, Integer> orderByTarget(TabSnapshot snapshot) {
-    return snapshot.entries().values().stream()
-        .collect(java.util.stream.Collectors.toMap(TabEntry::target, TabEntry::order));
   }
 }

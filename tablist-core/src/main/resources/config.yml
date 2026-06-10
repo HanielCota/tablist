@@ -9,13 +9,23 @@
 # Header shown at the top of the tab list.
 #   frames:         lines cycled in order to animate the header (one entry = static).
 #   interval-ticks: how many server ticks each frame stays on screen (20 ticks = 1 second).
+#
+# For a STATIC multi-line header, prefer `lines:` instead of `frames:` — each entry
+# is one rendered line, and an empty entry ("") is a blank line (a "skip a line"):
+#   header:
+#     lines:
+#       - "<gradient:#00c6ff:#0072ff>My Server</gradient>"
+#       - ""
+#       - "<gray>welcome!</gray>"
+# (`lines:` is just sugar for a single frame joined with <newline>. If both are set,
+#  `frames:` wins. You can always write <newline> by hand inside a frame too.)
 header:
   frames:
     - "<gradient:#00c6ff:#0072ff>Tablist</gradient>"
     - "<gradient:#0072ff:#00c6ff>Tablist</gradient>"
   interval-ticks: 20
 
-# Footer shown at the bottom of the tab list. Same format as `header`.
+# Footer shown at the bottom of the tab list. Same format as `header` (also supports `lines:`).
 footer:
   frames:
     - "<gray>Online: <white>%online%</white></gray>"
@@ -44,11 +54,18 @@ refresh:
   placeholder-refresh-seconds: 3
 
 # Command feedback. All MiniMessage; nothing the commands say is hardcoded.
-#   reload-error supports <error>
-#   status supports <viewers>, <hitrate>, <updates>, <frame>
+#   reload-error        supports <error>
+#   status              supports <viewers>, <hitrate>, <updates>, <frame>
+#   placeholders-entry  supports <name>, <description>
+#   placeholders-papi   is shown only when PlaceholderAPI is installed
 messages:
   reload-success: "<green>Tablist configuration reloaded.</green>"
   reload-error: "<red>Reload failed: <error></red>"
   status: "<gray>Viewers: <white><viewers></white> · Cache hit-rate: <white><hitrate></white> · Updates/min: <white><updates></white> · Frame: <white><frame></white></gray>"
   toggle-on: "<green>Custom tab list enabled.</green>"
   toggle-off: "<yellow>Custom tab list disabled — showing the vanilla tab.</yellow>"
+  preview-header: "<gray>──── <white>Header preview</white> ────</gray>"
+  preview-footer: "<gray>──── <white>Footer preview</white> ────</gray>"
+  placeholders-header: "<gray>Available placeholders <white>(resolved per viewer)</white>:</gray>"
+  placeholders-entry: "<white><name></white> <gray>— <description></gray>"
+  placeholders-papi: "<gray>PlaceholderAPI detected — <white>all its placeholders</white> work here too.</gray>"

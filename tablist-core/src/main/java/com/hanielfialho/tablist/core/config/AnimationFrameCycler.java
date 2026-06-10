@@ -54,6 +54,13 @@ public final class AnimationFrameCycler {
     return of(section.frames(), section.intervalTicks());
   }
 
+  private static int requirePositive(int intervalTicks) {
+    if (intervalTicks < 1) {
+      throw new IllegalArgumentException("interval-ticks must be >= 1");
+    }
+    return intervalTicks;
+  }
+
   /**
    * Returns the frame to display at the given tick. The frame advances once every {@code
    * intervalTicks} ticks and wraps around at the end of the sequence.
@@ -63,12 +70,5 @@ public final class AnimationFrameCycler {
    */
   public Renderable frameAt(long tick) {
     return frames.frameAt(Math.floorDiv(tick, intervalTicks));
-  }
-
-  private static int requirePositive(int intervalTicks) {
-    if (intervalTicks < 1) {
-      throw new IllegalArgumentException("interval-ticks must be >= 1");
-    }
-    return intervalTicks;
   }
 }
