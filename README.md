@@ -1,6 +1,6 @@
 <div align="center">
 
-# ⚡ Tablist
+# 👥 Tablist
 
 ### A high-performance, modular tab-list plugin for [Paper](https://papermc.io/) & [Folia](https://papermc.io/software/folia)
 
