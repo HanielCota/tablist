@@ -46,7 +46,9 @@ public class TablistPlugin extends JavaPlugin {
   @Override
   public void onEnable() {
     saveBundledConfig();
-    this.services = TablistServices.create(getDataFolder().toPath().resolve("config.yml"));
+    this.services =
+        TablistServices.create(
+            getDataFolder().toPath().resolve("config.yml"), getLogger()::warning);
 
     TabScheduler scheduler = TabSchedulerFactory.create(this);
     GroupWeightResolver groups = new PermissionGroupWeightResolver(services.config());

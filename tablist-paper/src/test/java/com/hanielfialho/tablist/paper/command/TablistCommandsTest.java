@@ -41,6 +41,12 @@ class TablistCommandsTest {
 
   private static final MiniMessage MINI = MiniMessage.miniMessage();
 
+  private static ConfigReloader reloader(Path file, ActiveConfig config) {
+    ViewerDirectory directory = List::of;
+    return new ConfigReloader(
+        new ConfigLoader(file), config, new DirtyAllViewers(new DirtyTracker(), directory));
+  }
+
   @Test
   void toggleFlipsTheViewerMarksThemDirtyAndConfirms() {
     ActiveConfig config = new ActiveConfig(TabConfig.defaults(), () -> {});
@@ -97,12 +103,6 @@ class TablistCommandsTest {
         MINI.deserialize(config.current().messages().reloadSuccess()),
         actor.lastMessage,
         "the success line must not be sent on failure");
-  }
-
-  private static ConfigReloader reloader(Path file, ActiveConfig config) {
-    ViewerDirectory directory = List::of;
-    return new ConfigReloader(
-        new ConfigLoader(file), config, new DirtyAllViewers(new DirtyTracker(), directory));
   }
 
   /** A command sender that captures the Component feedback it is sent. */

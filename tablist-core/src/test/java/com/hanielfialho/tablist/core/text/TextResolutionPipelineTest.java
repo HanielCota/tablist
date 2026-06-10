@@ -28,6 +28,26 @@ class TextResolutionPipelineTest {
   private static final ViewerId VIEWER = new ViewerId(UUID.randomUUID());
   private static final String TEMPLATE = "<red>hello <player_name></red>";
 
+  private static TextResolutionPipeline pipeline(
+      PlaceholderResolver resolver,
+      MiniMessage parser,
+      Duration ttl,
+      Ticker ticker,
+      DirtyTracker dirty) {
+    return new TextResolutionPipeline(
+        ResolvedTextCache.create(ttl, ticker), new TextResolver(resolver, parser), dirty);
+  }
+
+  private static MiniMessage countingParser() {
+    MiniMessage parser = mock(MiniMessage.class);
+    when(parser.deserialize(anyString())).thenReturn(Component.empty());
+    return parser;
+  }
+
+  private static PlaceholderResolver identity() {
+    return (viewer, raw) -> CompletableFuture.completedFuture(raw);
+  }
+
   @Test
   void parsesMiniMessageOncePerKeyWithinTheCacheWindow() {
     MiniMessage parser = countingParser();
@@ -73,25 +93,5 @@ class TextResolutionPipelineTest {
 
     assertEquals(
         List.of(VIEWER), List.copyOf(dirty.drainDirty()), "completion must mark the viewer dirty");
-  }
-
-  private static TextResolutionPipeline pipeline(
-      PlaceholderResolver resolver,
-      MiniMessage parser,
-      Duration ttl,
-      Ticker ticker,
-      DirtyTracker dirty) {
-    return new TextResolutionPipeline(
-        ResolvedTextCache.create(ttl, ticker), new TextResolver(resolver, parser), dirty);
-  }
-
-  private static MiniMessage countingParser() {
-    MiniMessage parser = mock(MiniMessage.class);
-    when(parser.deserialize(anyString())).thenReturn(Component.empty());
-    return parser;
-  }
-
-  private static PlaceholderResolver identity() {
-    return (viewer, raw) -> CompletableFuture.completedFuture(raw);
   }
 }

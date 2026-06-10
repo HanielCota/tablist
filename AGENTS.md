@@ -124,26 +124,26 @@ check, type validation, and ready-made error messages. You never wrote `if (args
 
 ## Annotation cheat sheet
 
-| Annotation | Target | Key fields (defaults) | Effect |
-| --- | --- | --- | --- |
-| `@Command` | class | `value`, `aliases={}` | Command root. Aliases only on the root. |
-| `@Subcommand` | method | `value`, `aliases={}` | Executable node under the root. Supports nested paths: `@Subcommand("admin reload")`. `aliases` add alternative names for the final segment (`@Subcommand(value="create", aliases="new")` → `/x create` and `/x new`). |
-| `@DefaultCommand` | method | — | Runs when the root is called with no subcommand (`/home`). |
-| `@Argument` | parameter | `value`, `greedy=false` | Names the positional argument. `greedy=true` consumes the rest (String only, must be last). |
-| `@OptionalArg` | parameter | — | On a final `Optional<T>`: optional positional. Absent → `Optional.empty()`. |
-| `@Flag` | parameter | `value`, `aliases={}` | Named flag after positionals. `boolean` = switch; `Optional<T>` = value flag. |
-| `@Range` | parameter | `min`, `max` | Bounds for `int`/`long` (validated client-side by Brigadier). |
-| `@Regex` | parameter | `value` | Validates a `String` against a pattern at bind time. |
-| `@Length` | parameter | `min`, `max` | Length bounds for a `String`. |
-| `@Suggest` | parameter | `SuggestionSource.class` | Tab-completion source (cached, off-thread). |
-| `@Permission` | class or method | `value` | Required permission node. On class = applies to all subcommands. |
-| `@Cooldown` | method | `seconds`, `bypassPermission=""` | Per-player cooldown. Bypass-node holders skip it. On a method returning `CompletionStage<?>`, commits only when the future succeeds. |
-| `@Confirm` | method | `value` (prompt) | Requires `/confirm` before running. |
-| `@PlayerOnly` | method | — | Rejects console/command-block/RCON. |
-| `@Async` | method | — | Runs the body off the main thread; feedback and the cooldown commit return on the main thread. Body returns `void`/`CommandResult`, not `CompletionStage`. |
-| `@Description` | class or method | `value` | Text for the auto-generated `/help` (method overrides class). |
-| `@Requires` | class or method | `CommandCondition.class...` | Custom guards run before the body. First denial stops execution. |
-| `@Context` | parameter | — | Injects a sender-derived value via a registered `ContextResolver`. |
+| Annotation        | Target          | Key fields (defaults)            | Effect                                                                                                                                                                                                                 |
+|-------------------|-----------------|----------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `@Command`        | class           | `value`, `aliases={}`            | Command root. Aliases only on the root.                                                                                                                                                                                |
+| `@Subcommand`     | method          | `value`, `aliases={}`            | Executable node under the root. Supports nested paths: `@Subcommand("admin reload")`. `aliases` add alternative names for the final segment (`@Subcommand(value="create", aliases="new")` → `/x create` and `/x new`). |
+| `@DefaultCommand` | method          | —                                | Runs when the root is called with no subcommand (`/home`).                                                                                                                                                             |
+| `@Argument`       | parameter       | `value`, `greedy=false`          | Names the positional argument. `greedy=true` consumes the rest (String only, must be last).                                                                                                                            |
+| `@OptionalArg`    | parameter       | —                                | On a final `Optional<T>`: optional positional. Absent → `Optional.empty()`.                                                                                                                                            |
+| `@Flag`           | parameter       | `value`, `aliases={}`            | Named flag after positionals. `boolean` = switch; `Optional<T>` = value flag.                                                                                                                                          |
+| `@Range`          | parameter       | `min`, `max`                     | Bounds for `int`/`long` (validated client-side by Brigadier).                                                                                                                                                          |
+| `@Regex`          | parameter       | `value`                          | Validates a `String` against a pattern at bind time.                                                                                                                                                                   |
+| `@Length`         | parameter       | `min`, `max`                     | Length bounds for a `String`.                                                                                                                                                                                          |
+| `@Suggest`        | parameter       | `SuggestionSource.class`         | Tab-completion source (cached, off-thread).                                                                                                                                                                            |
+| `@Permission`     | class or method | `value`                          | Required permission node. On class = applies to all subcommands.                                                                                                                                                       |
+| `@Cooldown`       | method          | `seconds`, `bypassPermission=""` | Per-player cooldown. Bypass-node holders skip it. On a method returning `CompletionStage<?>`, commits only when the future succeeds.                                                                                   |
+| `@Confirm`        | method          | `value` (prompt)                 | Requires `/confirm` before running.                                                                                                                                                                                    |
+| `@PlayerOnly`     | method          | —                                | Rejects console/command-block/RCON.                                                                                                                                                                                    |
+| `@Async`          | method          | —                                | Runs the body off the main thread; feedback and the cooldown commit return on the main thread. Body returns `void`/`CommandResult`, not `CompletionStage`.                                                             |
+| `@Description`    | class or method | `value`                          | Text for the auto-generated `/help` (method overrides class).                                                                                                                                                          |
+| `@Requires`       | class or method | `CommandCondition.class...`      | Custom guards run before the body. First denial stops execution.                                                                                                                                                       |
+| `@Context`        | parameter       | —                                | Injects a sender-derived value via a registered `ContextResolver`.                                                                                                                                                     |
 
 `/help` and `/confirm` are registered automatically — never declare them yourself.
 
@@ -166,20 +166,20 @@ Add either, both, or neither — in any position:
 
 The **parameter's Java type** decides parsing:
 
-| Type | Notes |
-| --- | --- |
-| `String` | Single token; `@Argument(greedy=true)` consumes the rest of the line. |
-| `int` / `Integer`, `long` / `Long` | Numeric; combine with `@Range`. |
-| `boolean` / `Boolean` | `true`/`false`. |
-| `UUID` | Parsed from canonical UUID string. |
-| any `enum` | Matched by name, case-insensitive, with value suggestions. |
-| `PlayerId`, `CoinAmount` | Core domain value objects (`com.hanielfialho.commandframework.domain.value`). |
-| `Player` | Native online-player selector. Missing/offline target → clean parse error before your method. |
-| `OfflinePlayer` | Resolved by profile. |
-| `World` | Native world selector. |
-| `List<T>` | Final parameter only; consumes the rest of the line. `T` = `String`, number, `boolean`, or `enum`. |
-| `Optional<T>` + `@OptionalArg` | Final optional positional. |
-| `Optional<T>` + `@Flag` | Value flag. |
+| Type                               | Notes                                                                                              |
+|------------------------------------|----------------------------------------------------------------------------------------------------|
+| `String`                           | Single token; `@Argument(greedy=true)` consumes the rest of the line.                              |
+| `int` / `Integer`, `long` / `Long` | Numeric; combine with `@Range`.                                                                    |
+| `boolean` / `Boolean`              | `true`/`false`.                                                                                    |
+| `UUID`                             | Parsed from canonical UUID string.                                                                 |
+| any `enum`                         | Matched by name, case-insensitive, with value suggestions.                                         |
+| `PlayerId`, `CoinAmount`           | Core domain value objects (`com.hanielfialho.commandframework.domain.value`).                      |
+| `Player`                           | Native online-player selector. Missing/offline target → clean parse error before your method.      |
+| `OfflinePlayer`                    | Resolved by profile.                                                                               |
+| `World`                            | Native world selector.                                                                             |
+| `List<T>`                          | Final parameter only; consumes the rest of the line. `T` = `String`, number, `boolean`, or `enum`. |
+| `Optional<T>` + `@OptionalArg`     | Final optional positional.                                                                         |
+| `Optional<T>` + `@Flag`            | Value flag.                                                                                        |
 
 Anything else must be registered — see [Custom argument type](#custom-argument-type).
 

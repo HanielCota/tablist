@@ -4,6 +4,7 @@ import com.hanielfialho.tablist.core.config.ActiveConfig;
 import com.hanielfialho.tablist.core.config.ConfigException;
 import com.hanielfialho.tablist.core.config.ConfigLoader;
 import com.hanielfialho.tablist.core.config.ConfigReloader;
+import com.hanielfialho.tablist.core.config.ConfigValidator;
 import com.hanielfialho.tablist.core.config.DirtyAllViewers;
 import com.hanielfialho.tablist.core.config.TabConfig;
 import com.hanielfialho.tablist.core.port.PlaceholderResolver;
@@ -21,6 +22,7 @@ import com.hanielfialho.tablist.core.text.TextResolver;
 import com.hanielfialho.tablist.paper.placeholder.PaperPlaceholderResolvers;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.function.Consumer;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
 /**
@@ -62,8 +64,23 @@ public record TablistServices(
    * @return the wired services
    */
   public static TablistServices create(Path configFile) {
+    return create(configFile, warning -> {});
+  }
+
+  /**
+   * Builds the whole shared graph, additionally reporting non-fatal configuration warnings (from
+   * the initial load and from every later {@code /tablist reload}) to {@code warningSink}.
+   *
+   * @param configFile the path to {@code config.yml}; need not exist
+   * @param warningSink receives each warning line, e.g. the plugin logger; never {@code null}
+   * @return the wired services
+   */
+  public static TablistServices create(Path configFile, Consumer<String> warningSink) {
     ConfigLoader loader = new ConfigLoader(configFile);
     TabConfig initial = loadOrDefault(loader);
+
+    ConfigValidator validator = new ConfigValidator();
+    validator.report(initial, warningSink);
 
     ResolvedTextCache cache =
         ResolvedTextCache.create(Duration.ofSeconds(initial.refresh().placeholderRefreshSeconds()));
@@ -82,7 +99,8 @@ public record TablistServices(
             cache, new TextResolver(placeholders, MiniMessage.miniMessage()), dirty);
 
     ConfigReloader reloader =
-        new ConfigReloader(loader, config, new DirtyAllViewers(dirty, registry));
+        new ConfigReloader(
+            loader, config, new DirtyAllViewers(dirty, registry), validator, warningSink);
     StatusReporter statusReporter =
         new StatusReporter(new StatusSources(registry, cache, metrics, clock, config));
 

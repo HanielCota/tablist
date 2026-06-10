@@ -42,20 +42,20 @@ public final class TablistBootstrap implements PluginBootstrap {
 
     private TablistServices cached;
 
-    @Override
-    public TablistServices get() {
-      if (cached == null) {
-        cached = lookup();
-      }
-      return cached;
-    }
-
     private static TablistServices lookup() {
       Plugin plugin = Bukkit.getPluginManager().getPlugin(PLUGIN_NAME);
       if (plugin instanceof TablistPlugin tablist) {
         return tablist.services();
       }
       throw new IllegalStateException("Tablist is not enabled yet; cannot resolve its services.");
+    }
+
+    @Override
+    public TablistServices get() {
+      if (cached == null) {
+        cached = lookup();
+      }
+      return cached;
     }
   }
 }

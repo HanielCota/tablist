@@ -30,20 +30,6 @@ public final class ConfigLoader {
     this.defaults = serializedDefaults(loader);
   }
 
-  /**
-   * Reads the file, applies defaults and validates the result.
-   *
-   * @return the loaded, complete and valid configuration
-   * @throws ConfigException if the YAML is malformed or a value fails validation
-   */
-  public TabConfig load() throws ConfigException {
-    try {
-      return deserialize(loader.load().mergeFrom(defaults));
-    } catch (ConfigurateException error) {
-      throw new ConfigException("Invalid Tablist configuration: " + error.getMessage(), error);
-    }
-  }
-
   private static TabConfig deserialize(ConfigurationNode node) throws SerializationException {
     return Objects.requireNonNull(node.get(TabConfig.class), "config");
   }
@@ -53,6 +39,22 @@ public final class ConfigLoader {
       return loader.createNode().set(TabConfig.class, TabConfig.defaults());
     } catch (SerializationException error) {
       throw new IllegalStateException("default configuration must be serializable", error);
+    }
+  }
+
+  /**
+   * Reads the file, applies defaults and validates the result.
+   *
+   * @return the loaded, complete and valid configuration
+   * @throws ConfigException if the YAML is malformed or a value fails validation
+   */
+  public TabConfig load() throws ConfigException {
+    try {
+      ConfigurationNode node = loader.load();
+      LineFrameSugar.expand(node);
+      return deserialize(node.mergeFrom(defaults));
+    } catch (ConfigurateException error) {
+      throw new ConfigException("Invalid Tablist configuration: " + error.getMessage(), error);
     }
   }
 }

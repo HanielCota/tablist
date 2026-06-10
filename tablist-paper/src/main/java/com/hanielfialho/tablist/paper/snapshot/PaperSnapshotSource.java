@@ -64,6 +64,17 @@ public final class PaperSnapshotSource implements SnapshotSource {
     this.groups = Objects.requireNonNull(groups, "groups");
   }
 
+  private static Frames frame(FrameSection section, long tick) {
+    return Frames.single(AnimationFrameCycler.from(section).frameAt(tick));
+  }
+
+  private static EntryText entryText(NameFormat format) {
+    return new EntryText(
+        new Renderable(format.prefix()),
+        new Renderable(format.name()),
+        new Renderable(format.suffix()));
+  }
+
   @Override
   public TabSnapshot snapshotOf(ViewerId viewer) {
     refreshIfStale(clock.tick());
@@ -86,16 +97,5 @@ public final class PaperSnapshotSource implements SnapshotSource {
     return viewers.viewers().stream()
         .map(target -> new TabEntry(target, text, groups.orderOf(target)))
         .toList();
-  }
-
-  private static Frames frame(FrameSection section, long tick) {
-    return Frames.single(AnimationFrameCycler.from(section).frameAt(tick));
-  }
-
-  private static EntryText entryText(NameFormat format) {
-    return new EntryText(
-        new Renderable(format.prefix()),
-        new Renderable(format.name()),
-        new Renderable(format.suffix()));
   }
 }

@@ -31,6 +31,14 @@ public final class FoliaViewerScheduler implements ViewerScheduler {
     this.viewer = Objects.requireNonNull(viewer, "viewer");
   }
 
+  private static ScheduledTask wrap(
+      io.papermc.paper.threadedregions.scheduler.ScheduledTask scheduled) {
+    if (scheduled == null) {
+      return new SkippedTask();
+    }
+    return new FoliaScheduledTask(scheduled);
+  }
+
   @Override
   public ScheduledTask schedule(Runnable task) {
     Player online = Bukkit.getPlayer(viewer.value());
@@ -66,13 +74,5 @@ public final class FoliaViewerScheduler implements ViewerScheduler {
     } catch (IllegalStateException regionUnavailable) {
       return new SkippedTask();
     }
-  }
-
-  private static ScheduledTask wrap(
-      io.papermc.paper.threadedregions.scheduler.ScheduledTask scheduled) {
-    if (scheduled == null) {
-      return new SkippedTask();
-    }
-    return new FoliaScheduledTask(scheduled);
   }
 }

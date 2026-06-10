@@ -29,6 +29,10 @@ class TogglingSnapshotSourceTest {
   private final TablistToggle toggle = new TablistToggle();
   private final TogglingSnapshotSource source = new TogglingSnapshotSource(delegate, toggle);
 
+  private static TabEntry row() {
+    return new TabEntry(new ViewerId(UUID.randomUUID()), EntryText.of("", "Steve", ""), 0);
+  }
+
   @Test
   void passesTheCustomSnapshotThroughWhenEnabled() {
     assertSame(full, source.snapshotOf(VIEWER), "an enabled viewer gets the delegate's snapshot");
@@ -55,9 +59,5 @@ class TogglingSnapshotSourceTest {
     assertTrue(diff.removedTargets().isEmpty(), "no row may be removed when toggling off");
     assertTrue(diff.upsertedEntries().isEmpty(), "rows are unchanged, so nothing to upsert");
     assertTrue(diff.headerFooter().isPresent(), "only the header/footer changes");
-  }
-
-  private static TabEntry row() {
-    return new TabEntry(new ViewerId(UUID.randomUUID()), EntryText.of("", "Steve", ""), 0);
   }
 }

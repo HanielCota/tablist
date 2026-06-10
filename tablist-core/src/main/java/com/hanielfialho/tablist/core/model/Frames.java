@@ -36,6 +36,12 @@ public record Frames(List<Renderable> values) {
     return new Frames(List.of(frame));
   }
 
+  private static void requireNonEmpty(List<Renderable> frames) {
+    if (frames.isEmpty()) {
+      throw new IllegalArgumentException("frames must not be empty");
+    }
+  }
+
   /**
    * Returns the frame to display at the given tick, cycling from the start when the tick exceeds
    * the frame count.
@@ -45,11 +51,5 @@ public record Frames(List<Renderable> values) {
    */
   public Renderable frameAt(long tick) {
     return values.get(Math.floorMod(tick, values.size()));
-  }
-
-  private static void requireNonEmpty(List<Renderable> frames) {
-    if (frames.isEmpty()) {
-      throw new IllegalArgumentException("frames must not be empty");
-    }
   }
 }
