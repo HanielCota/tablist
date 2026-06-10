@@ -2,9 +2,6 @@ package com.hanielfialho.tablist.paper.command;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.hanielfialho.commandframework.domain.value.PlayerId;
-import com.hanielfialho.commandframework.execution.CommandActor;
-import com.hanielfialho.commandframework.paper.feedback.FeedbackAudience;
 import com.hanielfialho.tablist.core.config.ActiveConfig;
 import com.hanielfialho.tablist.core.config.FrameSection;
 import com.hanielfialho.tablist.core.config.TabConfig;
@@ -16,9 +13,6 @@ import com.hanielfialho.tablist.core.text.TextResolver;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -75,51 +69,5 @@ class PreviewControllerTest {
     for (int i = 0; i < expected.size(); i++) {
       assertEquals(expected.get(i), actor.messages.get(i), "message at index " + i);
     }
-  }
-
-  /** A command sender that records every component it is sent, in order. */
-  private static final class RecordingActor implements CommandActor, FeedbackAudience {
-
-    private final List<Component> messages = new ArrayList<>();
-    private final UUID id = UUID.randomUUID();
-
-    @Override
-    public void sendInfo(Component message) {
-      messages.add(message);
-    }
-
-    @Override
-    public void sendError(Component message) {
-      messages.add(message);
-    }
-
-    @Override
-    public Optional<PlayerId> playerId() {
-      return Optional.of(PlayerId.of(id));
-    }
-
-    @Override
-    public boolean hasPermission(String permission) {
-      return true;
-    }
-
-    @Override
-    public String name() {
-      return "Tester";
-    }
-
-    @Override
-    public Locale locale() {
-      return Locale.ROOT;
-    }
-
-    @Override
-    public void sendSuccess(String message) {}
-
-    @Override
-    public void sendError(String message) {}
-
-    @Override
-    public void sendInfo(String message) {}
   }
 }
