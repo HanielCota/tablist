@@ -1,0 +1,35 @@
+# Paper plugin descriptor (modern "paper-plugins" loader).
+# https://docs.papermc.io/paper/dev/getting-started/paper-plugins
+name: Tablist
+version: '${version}'
+main: com.hanielfialho.tablist.paper.TablistPlugin
+# The /tablist command is registered by the CommandFramework during the
+# Paper COMMANDS lifecycle from this bootstrapper.
+bootstrapper: com.hanielfialho.tablist.paper.bootstrap.TablistBootstrap
+description: High-performance, modular tab-list plugin for Paper.
+author: Haniel Fialho
+website: https://github.com/hanielfialho/tablist
+# Minimum Minecraft API the plugin targets. Verify this against the exact
+# Paper build you deploy to (see the paper-api version in libs.versions.toml).
+api-version: '1.21'
+# Optional integrations. PlaceholderAPI is a soft dependency: when present it is
+# loaded before Tablist and joined onto the classpath, but Tablist runs normally
+# without it (the built-in placeholder resolver is always available).
+dependencies:
+  server:
+    PlaceholderAPI:
+      load: BEFORE
+      required: false
+      join-classpath: true
+permissions:
+  tablist.admin:
+    description: Manage Tablist (reload, status).
+    default: op
+  tablist.use:
+    description: Use Tablist player commands (toggle).
+    default: true
+  # Sorting groups are matched against tablist.group.<name> (e.g. tablist.group.admin),
+  # granted by your permissions plugin. Weights are configured in config.yml.
+  tablist.group.*:
+    description: Marker permissions mapping a player to a Tablist sorting group.
+    default: false

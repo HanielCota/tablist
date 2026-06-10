@@ -1,0 +1,12 @@
+# Normalize line endings: LF in the repository for everything text.
+* text=auto eol=lf
+
+# Windows scripts must keep CRLF to run correctly.
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# The Gradle wrapper script must stay LF to run on *nix.
+gradlew text eol=lf
+
+# Treat the wrapper jar as binary.
+gradle/wrapper/gradle-wrapper.jar binary

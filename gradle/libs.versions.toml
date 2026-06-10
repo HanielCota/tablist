@@ -1,0 +1,46 @@
+# Centralized dependency catalog for the Tablist build.
+# https://docs.gradle.org/current/userguide/version_catalogs.html
+
+[versions]
+java = "25"
+caffeine = "3.2.4"
+configurate = "4.2.0"
+adventure = "5.1.1"
+# PaperMC switched from "1.x" naming to a calendar scheme after 1.21.11.
+# This is the current stable line for the "1.26" (2026) generation.
+paper = "26.1.2.build.69-stable"
+junit = "5.14.4"
+mockito = "5.23.0"
+# The committed command layer targets the com.hanielfialho.commandframework API
+# (DefaultBootstrapConfiguration/PaperBootstrap, execution.CommandActor). v4.x renamed
+# the base package to io.github.hanielcota and changed the bootstrap model, so it is
+# incompatible; pin the matching API version.
+commandframework = "v0.2.1"
+placeholderapi = "2.11.6"
+googleJavaFormat = "1.35.0"
+spotless = "8.6.0"
+
+[libraries]
+# --- tablist-core ---
+caffeine = { module = "com.github.ben-manes.caffeine:caffeine", version.ref = "caffeine" }
+configurate-yaml = { module = "org.spongepowered:configurate-yaml", version.ref = "configurate" }
+
+# --- tablist-paper (provided by Paper at runtime) ---
+paper-api = { module = "io.papermc.paper:paper-api", version.ref = "paper" }
+commandframework-core = { module = "com.github.HanielCota.CommandFramework:command-core", version.ref = "commandframework" }
+commandframework-paper = { module = "com.github.HanielCota.CommandFramework:command-paper", version.ref = "commandframework" }
+adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventure-minimessage = { module = "net.kyori:adventure-text-minimessage", version.ref = "adventure" }
+# Optional integration; soft dependency declared in paper-plugin.yml.
+placeholderapi = { module = "me.clip:placeholderapi", version.ref = "placeholderapi" }
+
+# --- test ---
+junit-bom = { module = "org.junit:junit-bom", version.ref = "junit" }
+junit-jupiter = { module = "org.junit.jupiter:junit-jupiter" }
+junit-platform-launcher = { module = "org.junit.platform:junit-platform-launcher" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockito" }
+mockito-junit-jupiter = { module = "org.mockito:mockito-junit-jupiter", version.ref = "mockito" }
+
+[plugins]
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
+shadow = { id = "com.gradleup.shadow", version = "9.4.2" }

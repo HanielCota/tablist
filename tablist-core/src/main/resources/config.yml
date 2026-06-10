@@ -1,0 +1,54 @@
+# ==========================================================================
+#  Tablist configuration
+#
+#  All text supports MiniMessage formatting
+#  (https://docs.advntr.dev/minimessage/format.html) and placeholders, which
+#  are resolved per viewer. Colours, gradients and tags are all allowed.
+# ==========================================================================
+
+# Header shown at the top of the tab list.
+#   frames:         lines cycled in order to animate the header (one entry = static).
+#   interval-ticks: how many server ticks each frame stays on screen (20 ticks = 1 second).
+header:
+  frames:
+    - "<gradient:#00c6ff:#0072ff>Tablist</gradient>"
+    - "<gradient:#0072ff:#00c6ff>Tablist</gradient>"
+  interval-ticks: 20
+
+# Footer shown at the bottom of the tab list. Same format as `header`.
+footer:
+  frames:
+    - "<gray>Online: <white>%online%</white></gray>"
+  interval-ticks: 20
+
+# How each player's name is rendered in the list.
+#   prefix/suffix wrap the name; all three support MiniMessage and placeholders.
+name-format:
+  prefix: ""
+  name: "<white>%player_name%</white>"
+  suffix: ""
+
+# Sorting groups, matched against the tablist.group.<name> permission.
+# Weight is a rank: the LOWER the weight, the higher up the tab list the group
+# appears (so admin sits above default). Equal weights fall back to the
+# downstream tie-breaker. A player in no group sorts with "default".
+sorting:
+  - group: "admin"
+    weight: 0
+  - group: "default"
+    weight: 100
+
+# Periodic refresh of placeholder values.
+refresh:
+  # How often (in seconds) placeholders are re-resolved. Minimum 1, default 3.
+  placeholder-refresh-seconds: 3
+
+# Command feedback. All MiniMessage; nothing the commands say is hardcoded.
+#   reload-error supports <error>
+#   status supports <viewers>, <hitrate>, <updates>, <frame>
+messages:
+  reload-success: "<green>Tablist configuration reloaded.</green>"
+  reload-error: "<red>Reload failed: <error></red>"
+  status: "<gray>Viewers: <white><viewers></white> · Cache hit-rate: <white><hitrate></white> · Updates/min: <white><updates></white> · Frame: <white><frame></white></gray>"
+  toggle-on: "<green>Custom tab list enabled.</green>"
+  toggle-off: "<yellow>Custom tab list disabled — showing the vanilla tab.</yellow>"
